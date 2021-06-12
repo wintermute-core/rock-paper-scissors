@@ -1,15 +1,20 @@
 package com.game.prs.service;
 
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 import javax.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class StatisticsServiceImpl implements StatisticsService {
 
-  private Map<String, AtomicLong> counters;
+  @Autowired
+  private MeterRegistry meterRegistry;
+
+  private Map<String, Counter> counters;
 
   @PostConstruct
   public void init() {
@@ -19,8 +24,11 @@ public class StatisticsServiceImpl implements StatisticsService {
   @Override
   public void countMetric(String metricName) {
     if (!counters.containsKey(metricName)) {
-      counters.put(metricName, new AtomicLong(0));
+      Counter counter = Counter.builder(metricName)
+          .register(meterRegistry);
+      counters.put(metricName, counter);
     }
-    counters.get(metricName).incrementAndGet();
+
+    counters.get(metricName).increment();
   }
 }

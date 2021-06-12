@@ -14,3 +14,9 @@ game:
     port: 6969
   console:
     enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

@@ -1,7 +1,19 @@
 package com.game.prs.game;
 
+import static com.game.prs.I18N.FAILED_TO_PARSE_INPUT;
+import static com.game.prs.I18N.GAME_STATUS_DRAW;
+import static com.game.prs.I18N.GAME_STATUS_LOG;
+import static com.game.prs.I18N.GAME_STATUS_PLAYER1_WON;
+import static com.game.prs.I18N.GAME_STATUS_PLAYER2_WON;
+import static com.game.prs.I18N.OPPONENT_RESPONSE;
+import static com.game.prs.I18N.PROMPT_FAILED_TO_READ_GAME_COUNT;
+import static com.game.prs.I18N.PROMPT_GAME_COUNT;
+import static com.game.prs.I18N.PROMPT_PLAYER_CHOICE;
+import static com.game.prs.I18N.SESSION_FINISHED;
+
 import com.game.prs.model.PlayerChoice;
 import com.game.prs.model.SessionState;
+import com.game.prs.model.WinResult;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,10 +21,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Locale;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.javatuples.Triplet;
 
 /**
  * Human player, interact with game through IO streams.
@@ -33,14 +45,14 @@ public class HumanPlayer implements Player, SessionListener {
   @Override
   public int fetchGameCount() {
     while(true) {
-      printOutput("Please enter number of games to be played:");
+      printOutput(PROMPT_GAME_COUNT);
       try {
         String value = bufferedReader.readLine();
         if (StringUtils.isNotBlank(value)) {
           return Integer.parseInt(value.trim());
         }
       } catch (NumberFormatException | IOException e) {
-        printOutput("Failed to parse entered value, expected to get a number");
+        printOutput(PROMPT_FAILED_TO_READ_GAME_COUNT);
         log.error("Failed to read input", e);
       }
     }
@@ -49,15 +61,14 @@ public class HumanPlayer implements Player, SessionListener {
   @Override
   public PlayerChoice fetchPlayerChoice() {
     while (true) {
-      printOutput(String.format("Choose one of %s:",
-          Arrays.toString(PlayerChoice.values())));
+      printOutput(PROMPT_PLAYER_CHOICE);
       try {
         String value = bufferedReader.readLine();
         if (StringUtils.isNotBlank(value)) {
           return PlayerChoice.valueOf(value.trim().toUpperCase(Locale.ROOT));
         }
       } catch (IllegalArgumentException | IOException e) {
-        printOutput("Failed to parse entered value");
+        printOutput(FAILED_TO_PARSE_INPUT);
         log.error("Failed to read input", e);
       }
     }
@@ -75,12 +86,19 @@ public class HumanPlayer implements Player, SessionListener {
   @Override
   public void update(Session session, SessionState oldState, SessionState newState) {
 
-    printOutput("Game state switched to " + newState);
     switch (newState) {
-      case READ_PLAYER1_INPUT -> printOutput(String.format("Game %s of %s", session.getCurrentGame(), session.getTotalGames()));
-      case SINGLE_GAME_FINISHED -> printOutput("Game result: " + session.lastResult().get());
+      case READ_PLAYER1_INPUT -> printOutput(String.format(GAME_STATUS_LOG, session.getCurrentGame(), session.getTotalGames()));
+      case SINGLE_GAME_FINISHED -> {
+        Triplet<PlayerChoice, PlayerChoice, WinResult> status = session.lastResult().get();
+        printOutput(String.format(OPPONENT_RESPONSE, status.getValue1()));
+        switch (status.getValue2()) {
+          case PLAYER1 -> printOutput(GAME_STATUS_PLAYER1_WON);
+          case PLAYER2 -> printOutput(GAME_STATUS_PLAYER2_WON);
+          case DRAW -> printOutput(GAME_STATUS_DRAW);
+        }
+      }
       case SESSION_FINISHED -> {
-        printOutput("Game session finished");
+        printOutput(SESSION_FINISHED);
 
       }
     }

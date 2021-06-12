@@ -1,5 +1,8 @@
 package com.game.prs.service;
 
+import static com.game.prs.I18N.TERMINAL_MESSAGE_LOG;
+import static com.game.prs.I18N.TERMINAL_WELCOME_MESSAGE;
+
 import com.game.prs.game.HumanPlayer;
 import com.game.prs.game.Session;
 import com.game.prs.model.SessionState;
@@ -35,15 +38,11 @@ public class ConsoleGameService extends AbstractGameServiceImpl {
 
   private Runnable terminalGame() {
     return () -> {
-      log.info("""
-          \n
-          Paper Rock Scissors game terminal mode \n
-          \n
-          """);
+      log.info(TERMINAL_MESSAGE_LOG);
       BufferedReader inputReader = new BufferedReader(
           new InputStreamReader(System.in));
       while(true) {
-        System.out.println(" *** Press Enter to start new game *** ");
+        System.out.println(TERMINAL_WELCOME_MESSAGE);
         try {
           if (inputReader.readLine() == null) {
             log.warn("Failed to access terminal");

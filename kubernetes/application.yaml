@@ -1,0 +1,12 @@
+server:
+  port: 8080
+
+game:
+  threads: 10
+  tcp:
+    enabled: true
+    port: 6969
+
+  console:
+    # no console output in containers
+    enabled: false

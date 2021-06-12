@@ -17,6 +17,7 @@ export CONTAINER_IMAGE="${IMAGE_REGISTRY}${dir}:${tag}"
 export CONTAINER_IMAGE_LATEST="${IMAGE_REGISTRY}${dir}:latest"
 
 ./gradlew clean build
+rm -rf build/libs/*-plain.jar
 
 docker build -t "${CONTAINER_IMAGE}" .
 docker tag "${CONTAINER_IMAGE}" "${CONTAINER_IMAGE_LATEST}"

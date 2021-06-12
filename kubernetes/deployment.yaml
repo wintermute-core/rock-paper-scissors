@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: game
-          image: denis256/paper-rock-scissors:4a9b7
+          image: denis256/paper-rock-scissors:eefd7
           ports:
             - containerPort: 6969
           volumeMounts:

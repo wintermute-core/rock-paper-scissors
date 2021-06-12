@@ -17,8 +17,26 @@ spec:
       containers:
         - name: game
           image: denis256/paper-rock-scissors:eefd7
+          env:
+            - name: JAVA_OPTS
+              value: "-server"
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "1"
+            limits:
+              memory: "512Mi"
+              cpu: "1"
+          readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 2
+            exec:
+              command: ["curl", "--fail", "http://localhost:8080/actuator/health"]
           ports:
-            - containerPort: 6969
+            - name: game-port
+              containerPort: 6969
+            - name: http
+              containerPort: 8080
           volumeMounts:
             - name: config
               mountPath: /app/config

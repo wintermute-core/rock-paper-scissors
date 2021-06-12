@@ -1,7 +1,6 @@
 package com.game.prs.game;
 
 import com.game.prs.model.PlayerChoice;
-import com.game.prs.model.SessionState;
 import java.util.Random;
 
 /**
@@ -13,7 +12,7 @@ public class CpuPlayer implements Player {
 
   @Override
   public int fetchGameCount() {
-    throw new RuntimeException("Not implemented");
+    throw new RuntimeException("Not supported");
   }
 
   @Override
@@ -22,8 +21,4 @@ public class CpuPlayer implements Player {
     return values[random.nextInt(values.length)];
   }
 
-  @Override
-  public void update(Session session, SessionState oldState, SessionState newState) {
-
-  }
 }

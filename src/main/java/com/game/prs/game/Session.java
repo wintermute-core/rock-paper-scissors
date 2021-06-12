@@ -5,9 +5,11 @@ import com.game.prs.model.SessionState;
 import com.game.prs.model.WinResult;
 import com.google.common.annotations.VisibleForTesting;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.javatuples.Triplet;
 
 /**
  * Game session performed between 2 players
@@ -17,9 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Session {
 
-  @Getter
   private final Player player1;
-  @Getter
+
   private final Player player2;
 
   private final Rules rules;
@@ -33,14 +34,15 @@ public class Session {
   @Getter
   private int currentGame = 0;
 
-  @Getter
   private PlayerChoice player1Choice;
 
-  @Getter
   private PlayerChoice player2Choice;
 
   @Getter
   private WinResult winResult;
+
+  @Getter
+  private List<Triplet<PlayerChoice, PlayerChoice, WinResult>> history = new CopyOnWriteArrayList<>();
 
   private final Collection<SessionListener> sessionListeners = new CopyOnWriteArrayList<>();
 
@@ -89,6 +91,7 @@ public class Session {
       }
       case SHOW_GAME_RESULT -> {
         winResult = rules.evaluate(player1Choice, player2Choice);
+        history.add(Triplet.with(player1Choice, player2Choice, winResult));
         changeState(SessionState.GAME_FINISHED);
       }
       case GAME_FINISHED -> {
@@ -148,5 +151,15 @@ public class Session {
   @VisibleForTesting
   void setPlayer2Choice(PlayerChoice player2Choice) {
     this.player2Choice = player2Choice;
+  }
+
+  @VisibleForTesting
+  PlayerChoice getPlayer1Choice() {
+    return player1Choice;
+  }
+
+  @VisibleForTesting
+  PlayerChoice getPlayer2Choice() {
+    return player2Choice;
   }
 }

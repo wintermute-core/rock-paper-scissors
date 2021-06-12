@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import org.hamcrest.Matchers;
+import org.javatuples.Triplet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -192,6 +193,13 @@ class SessionTest {
     session.update();
 
     Mockito.verify(rules).evaluate(PlayerChoice.PAPER, PlayerChoice.ROCK);
+
+    assertEquals(1, session.getHistory().size());
+    Triplet<PlayerChoice, PlayerChoice, WinResult> result = session.getHistory().get(0);
+    assertEquals(PlayerChoice.PAPER, result.getValue0());
+    assertEquals(PlayerChoice.ROCK, result.getValue1());
+    assertEquals(WinResult.DRAW, result.getValue2());
+
     assertEquals(WinResult.DRAW, session.getWinResult());
     assertEquals(SessionState.GAME_FINISHED, session.getSessionState());
     assertTrue(switchExecuted.get());

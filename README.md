@@ -127,34 +127,42 @@ Run container application:
 ```
 docker run -it -p 8080:8080 -p 6969:6969 denis256/paper-rock-scissors:latest
 ```
-Interaction:
-* over terminal
-* over tcp, with telnet `telnet localhost 6969`
-* over http, to get metrics/health status http://localhost:8080/actuator/prometheus http://localhost:8080/actuator/health
-
 
 # Kubernetes deployment
 
+Prerequisite: running K8S cluster, kubectl configured to access cluster.
+
+Deployment of Kustomize resources:
 ```
-$ kubectl  apply -k kubernetes
-configmap/app-config-5tt6t9gtfk created
+kubectl -n <deployment-namespace> apply -k kubernetes
+
+configmap/app-config-xxx created
 service/game-service created
 deployment.apps/paper-rock-scissors created
 ```
 
+Check status of pods:
+```
+kubectl -n <deployment-namespace> get pods 
+```
+
+# Accessing application
+* over terminal
+* over tcp, with telnet `telnet localhost 6969`
+* over http, to get metrics/health status http://localhost:8080/actuator/prometheus http://localhost:8080/actuator/health
+* in case of Kubernetes deployments, can be used NodePort ``
+
+
 # Future work
 
+List of future improvements:
+* separation of integration tests as separated module and execution against fully started application;
+* asyncronous handling of users by using Nio servers, like Netty;
+* usage of IMGD(like Apache Geode, Hazelcast) for saving game session and restoring it on other node;
+* saving of statistics from each application in one common place;
+* CI/CD pipeline for automated test execution and monitoring of code quality;
+* service monitors configuration for Prometheus and Grafana dashboards to show status of applications;
 
-
-iTest
-
-IMGD
-
-Common statistics
-
-CI/CD
-
-UI
 
 # License
 

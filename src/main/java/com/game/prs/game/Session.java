@@ -51,6 +51,15 @@ public class Session {
     this.rules = gameRules;
     this.player1 = player1;
     this.player2 = player2;
+
+    // automatically subscribe players to game state updates
+    if (player1 instanceof SessionListener listener) {
+      subscribe(listener);
+    }
+
+    if (player2 instanceof SessionListener listener) {
+      subscribe(listener);
+    }
   }
 
   /**

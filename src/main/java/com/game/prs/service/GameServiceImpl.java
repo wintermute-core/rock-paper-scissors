@@ -9,11 +9,15 @@ import com.game.prs.game.SessionListener;
 import com.game.prs.model.SessionState;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
 public class GameServiceImpl implements GameService {
+
+  @Autowired
+  private StatisticsService statisticsService;
 
   @PostConstruct
   public void init() {
@@ -30,11 +34,14 @@ public class GameServiceImpl implements GameService {
 
   @Override
   public Session newSession(Player humanPlayer) {
-    Session session = new Session(new RulesImpl(), humanPlayer, new CpuPlayer());
+
+    Player player2 = new CpuPlayer();
+    Session session = new Session(new RulesImpl(), humanPlayer, player2);
+
     session.subscribe(new SessionListener() {
       @Override
       public void update(Session session, SessionState oldState, SessionState newState) {
-        log.info("Session " + session.hashCode() + " New session: " + newState);
+        statisticsService.countMetric(newState.toString());
       }
     });
     return session;

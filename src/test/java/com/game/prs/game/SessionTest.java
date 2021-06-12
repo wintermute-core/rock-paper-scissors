@@ -37,12 +37,7 @@ class SessionTest {
     session = new Session(rules, player1, player2);
 
     sessionStates = new ArrayList<>();
-    session.subscribe(new SessionListener() {
-      @Override
-      public void update(Session session, SessionState oldState, SessionState newState) {
-        sessionStates.add(newState);
-      }
-    });
+    session.subscribe((session, oldState, newState) -> sessionStates.add(newState));
   }
 
   @Test
@@ -87,6 +82,25 @@ class SessionTest {
     assertThat(sessionStates, Matchers.everyItem(Matchers.isIn(Arrays
         .asList(SessionState.NEW_SESSION, SessionState.READ_GAME_COUNT,
             SessionState.INVALID_PLAYER1_INPUT, SessionState.READ_GAME_COUNT))));
+  }
+
+  @Test
+  void readPlayer1GameCount() {
+    session.setSessionState(SessionState.READ_GAME_COUNT);
+    AtomicReference<Boolean> switchExecuted = subscribe(SessionState.READ_GAME_COUNT,
+        SessionState.READ_PLAYER1_INPUT);
+
+    Mockito.when(player1.fetchGameCount()).thenReturn(5);
+
+    session.update();
+
+    Mockito.verify(player1).fetchGameCount();
+    assertEquals(5, session.getTotalGames());
+    assertEquals(SessionState.READ_PLAYER1_INPUT, session.getSessionState());
+    assertTrue(switchExecuted.get());
+    assertThat(sessionStates, Matchers.everyItem(Matchers.isIn(Arrays
+        .asList(SessionState.NEW_SESSION, SessionState.READ_GAME_COUNT,
+            SessionState.READ_PLAYER1_INPUT))));
   }
 
   private AtomicReference<Boolean> subscribe(SessionState subOld, SessionState subNew) {

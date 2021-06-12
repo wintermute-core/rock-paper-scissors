@@ -125,4 +125,14 @@ public class Session {
   void setSessionState(SessionState sessionState) {
     this.sessionState = sessionState;
   }
+
+  @VisibleForTesting
+  public void setTotalGames(int totalGames) {
+    this.totalGames = totalGames;
+  }
+
+  @VisibleForTesting
+  public void setCurrentGame(int currentGame) {
+    this.currentGame = currentGame;
+  }
 }

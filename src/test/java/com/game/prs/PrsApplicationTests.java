@@ -1,10 +1,10 @@
-package com.game.rps;
+package com.game.prs;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PaperRockScissorsApplicationTests {
+class PrsApplicationTests {
 
 	@Test
 	void contextLoads() {

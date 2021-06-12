@@ -12,6 +12,12 @@ import org.junit.jupiter.api.Test;
 
 class DefaultGameRulesTest {
 
+  static final List<Pair<PlayerChoice, PlayerChoice>> WIN_PAIRS = Arrays.asList(
+      Pair.with(PlayerChoice.PAPER, PlayerChoice.ROCK),
+      Pair.with(PlayerChoice.ROCK, PlayerChoice.SCISSORS),
+      Pair.with(PlayerChoice.SCISSORS, PlayerChoice.PAPER)
+  );
+
   private GameRules gameRules;
 
   @BeforeEach
@@ -29,19 +35,18 @@ class DefaultGameRulesTest {
 
   @Test
   void player1WinEvaluation() {
-
-    List<Pair<PlayerChoice, PlayerChoice>> player1WinPairs = Arrays.asList(
-        Pair.with(PlayerChoice.PAPER, PlayerChoice.ROCK),
-        Pair.with(PlayerChoice.ROCK, PlayerChoice.SCISSORS),
-        Pair.with(PlayerChoice.SCISSORS, PlayerChoice.PAPER)
-    );
-
-    for (Pair<PlayerChoice, PlayerChoice> pair : player1WinPairs) {
+    for (Pair<PlayerChoice, PlayerChoice> pair : WIN_PAIRS) {
       assertEquals(WinResult.PLAYER1, gameRules.evaluate(pair.getValue0(), pair.getValue1()),
           String.format("Expected player1 to win for %s", pair));
     }
+  }
 
-
+  @Test
+  void player2WinEvaluation() {
+    for (Pair<PlayerChoice, PlayerChoice> pair : WIN_PAIRS) {
+      assertEquals(WinResult.PLAYER2, gameRules.evaluate(pair.getValue1(), pair.getValue0()),
+          String.format("Expected player2 to win for %s", pair));
+    }
   }
 
 }

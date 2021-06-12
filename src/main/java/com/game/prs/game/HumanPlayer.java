@@ -2,6 +2,7 @@ package com.game.prs.game;
 
 import com.game.prs.model.PlayerChoice;
 import com.game.prs.model.SessionState;
+import com.game.prs.model.WinResult;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,7 +11,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 import lombok.extern.slf4j.Slf4j;
+import org.javatuples.Triplet;
 
 /**
  * Human player, interact with game through IO streams.
@@ -34,7 +38,7 @@ public class HumanPlayer implements Player, SessionListener {
       printOutput("Please enter number of games to be played:");
       try {
         return Integer.parseInt(bufferedReader.readLine().trim());
-      } catch (IOException e) {
+      } catch (NumberFormatException | IOException e) {
         printOutput("Failed to parse entered value, expected to get a number");
         log.error("Failed to read input", e);
         continue;
@@ -45,12 +49,12 @@ public class HumanPlayer implements Player, SessionListener {
   @Override
   public PlayerChoice fetchPlayerChoice() {
     while (true) {
-      printOutput(String.format("Please enter number of games to be played %s:",
+      printOutput(String.format("Choose one of %s:",
           Arrays.toString(PlayerChoice.values())));
       try {
-        return PlayerChoice.valueOf(bufferedReader.readLine().trim());
-      } catch (IOException e) {
-        printOutput("Failed to parse entered value, expected to get a number");
+        return PlayerChoice.valueOf(bufferedReader.readLine().trim().toUpperCase(Locale.ROOT));
+      } catch (IllegalArgumentException | IOException e) {
+        printOutput("Failed to parse entered value");
         log.error("Failed to read input", e);
       }
     }
@@ -59,6 +63,7 @@ public class HumanPlayer implements Player, SessionListener {
   private void printOutput(String message) {
     try {
       bufferedOutput.write((message + "\n").getBytes(StandardCharsets.UTF_8));
+      bufferedOutput.flush();
     } catch (IOException e) {
       log.error("Failed to print message", e);
     }
@@ -69,6 +74,7 @@ public class HumanPlayer implements Player, SessionListener {
 
     printOutput("Game state switched to " + newState);
     switch (newState) {
+      case SINGLE_GAME_FINISHED -> printOutput("Game result: " + session.lastResult().get());
       case SESSION_FINISHED -> {
         printOutput("Game session finished");
 
@@ -78,6 +84,7 @@ public class HumanPlayer implements Player, SessionListener {
           log.error("Failed to close reader", e);
         }
         try {
+          bufferedOutput.flush();
           bufferedOutput.close();
         } catch (IOException e) {
           log.error("Failed to close output");

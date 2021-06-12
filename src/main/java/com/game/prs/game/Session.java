@@ -6,6 +6,7 @@ import com.game.prs.model.WinResult;
 import com.google.common.annotations.VisibleForTesting;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +33,7 @@ public class Session {
   private int totalGames = 0;
 
   @Getter
-  private int currentGame = 0;
+  private int currentGame = 1;
 
   private PlayerChoice player1Choice;
 
@@ -92,9 +93,9 @@ public class Session {
       case SHOW_GAME_RESULT -> {
         winResult = rules.evaluate(player1Choice, player2Choice);
         history.add(Triplet.with(player1Choice, player2Choice, winResult));
-        changeState(SessionState.GAME_FINISHED);
+        changeState(SessionState.SINGLE_GAME_FINISHED);
       }
-      case GAME_FINISHED -> {
+      case SINGLE_GAME_FINISHED -> {
         if (currentGame == totalGames) {
           changeState(SessionState.SESSION_FINISHED);
           return;
@@ -118,6 +119,13 @@ public class Session {
       });
     }
     this.sessionState = newState;
+  }
+
+  public Optional<Triplet<PlayerChoice, PlayerChoice, WinResult>> lastResult() {
+    if (history.isEmpty()) {
+      return Optional.empty();
+    }
+    return Optional.of(history.get(history.size() - 1));
   }
 
   public void subscribe(SessionListener listener) {

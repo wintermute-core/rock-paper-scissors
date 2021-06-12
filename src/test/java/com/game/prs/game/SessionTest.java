@@ -188,7 +188,7 @@ class SessionTest {
     Mockito.when(rules.evaluate(PlayerChoice.PAPER, PlayerChoice.ROCK)).thenReturn(WinResult.DRAW);
 
     AtomicReference<Boolean> switchExecuted = subscribe(SessionState.SHOW_GAME_RESULT,
-        SessionState.GAME_FINISHED);
+        SessionState.SINGLE_GAME_FINISHED);
 
     session.update();
 
@@ -201,7 +201,7 @@ class SessionTest {
     assertEquals(WinResult.DRAW, result.getValue2());
 
     assertEquals(WinResult.DRAW, session.getWinResult());
-    assertEquals(SessionState.GAME_FINISHED, session.getSessionState());
+    assertEquals(SessionState.SINGLE_GAME_FINISHED, session.getSessionState());
     assertTrue(switchExecuted.get());
   }
 
@@ -209,9 +209,9 @@ class SessionTest {
   void gameRestart() {
     session.setTotalGames(666);
     session.setCurrentGame(1);
-    session.setSessionState(SessionState.GAME_FINISHED);
+    session.setSessionState(SessionState.SINGLE_GAME_FINISHED);
 
-    AtomicReference<Boolean> switchExecuted = subscribe(SessionState.GAME_FINISHED,
+    AtomicReference<Boolean> switchExecuted = subscribe(SessionState.SINGLE_GAME_FINISHED,
         SessionState.READ_PLAYER1_INPUT);
 
     session.update();
@@ -225,9 +225,9 @@ class SessionTest {
   void sessionTermination() {
     session.setTotalGames(666);
     session.setCurrentGame(666);
-    session.setSessionState(SessionState.GAME_FINISHED);
+    session.setSessionState(SessionState.SINGLE_GAME_FINISHED);
 
-    AtomicReference<Boolean> switchExecuted = subscribe(SessionState.GAME_FINISHED,
+    AtomicReference<Boolean> switchExecuted = subscribe(SessionState.SINGLE_GAME_FINISHED,
         SessionState.SESSION_FINISHED);
 
     session.update();

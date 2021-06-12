@@ -18,11 +18,11 @@ class DefaultGameRulesTest {
       Pair.with(PlayerChoice.SCISSORS, PlayerChoice.PAPER)
   );
 
-  private GameRules gameRules;
+  private Rules gameRules;
 
   @BeforeEach
   void init() {
-    gameRules = new GameRulesImpl();
+    gameRules = new RulesImpl();
   }
 
   @Test

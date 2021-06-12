@@ -6,7 +6,7 @@ import com.game.prs.model.WinResult;
 /**
  * Implementation of game rules in java code.
  */
-public class GameRulesImpl implements GameRules {
+public class RulesImpl implements Rules {
 
   @Override
   public WinResult evaluate(PlayerChoice player1, PlayerChoice player2) {

@@ -6,7 +6,7 @@ import com.game.prs.model.WinResult;
 /**
  * Paper Rock Scissors game rules.
  */
-public interface GameRules {
+public interface Rules {
 
   /**
    * Evaluate game result based on player input

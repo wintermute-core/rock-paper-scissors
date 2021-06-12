@@ -72,6 +72,7 @@ public class Session {
         if (playerChoice == null) {
           changeState(SessionState.INVALID_PLAYER1_INPUT);
           changeState(SessionState.READ_PLAYER1_INPUT);
+          return;
         }
         player1Choice = playerChoice;
         changeState(SessionState.READ_PLAYER1_INPUT);
@@ -81,6 +82,7 @@ public class Session {
         if (playerChoice == null) {
           changeState(SessionState.INVALID_PLAYER2_INPUT);
           changeState(SessionState.READ_PLAYER2_INPUT);
+          return;
         }
         player2Choice = playerChoice;
         winResult = rules.evaluate(player1Choice, player2Choice);

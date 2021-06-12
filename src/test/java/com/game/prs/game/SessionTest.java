@@ -103,6 +103,45 @@ class SessionTest {
             SessionState.READ_PLAYER1_INPUT))));
   }
 
+  @Test
+  void player1InputInvalid() {
+    session.setSessionState(SessionState.READ_PLAYER1_INPUT);
+    Mockito.when(player1.fetchPlayerChoice()).thenReturn(null);
+
+    AtomicReference<Boolean> switchExecuted = subscribe(SessionState.READ_PLAYER1_INPUT,
+        SessionState.INVALID_PLAYER1_INPUT);
+
+    session.update();
+
+    Mockito.verify(player1).fetchPlayerChoice();
+
+    assertEquals(SessionState.READ_PLAYER1_INPUT, session.getSessionState());
+    assertTrue(switchExecuted.get());
+    assertThat(sessionStates, Matchers.everyItem(Matchers.isIn(Arrays
+        .asList(
+            SessionState.INVALID_PLAYER1_INPUT, SessionState.READ_PLAYER1_INPUT))));
+  }
+
+  @Test
+  void player2InputInvalid() {
+    session.setSessionState(SessionState.READ_PLAYER2_INPUT);
+    Mockito.when(player2.fetchPlayerChoice()).thenReturn(null);
+
+    AtomicReference<Boolean> switchExecuted = subscribe(SessionState.READ_PLAYER2_INPUT,
+        SessionState.INVALID_PLAYER2_INPUT);
+
+    session.update();
+
+    Mockito.verify(player2).fetchPlayerChoice();
+
+    assertEquals(SessionState.READ_PLAYER2_INPUT, session.getSessionState());
+    assertTrue(switchExecuted.get());
+    assertThat(sessionStates, Matchers.everyItem(Matchers.isIn(Arrays
+        .asList(
+            SessionState.INVALID_PLAYER2_INPUT, SessionState.READ_PLAYER2_INPUT))));
+  }
+
+
   private AtomicReference<Boolean> subscribe(SessionState subOld, SessionState subNew) {
     AtomicReference<Boolean> switchExecuted = new AtomicReference<>(false);
     session.subscribe((session, oldState, newState) -> {

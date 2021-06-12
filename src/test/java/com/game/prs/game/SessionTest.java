@@ -187,13 +187,71 @@ class SessionTest {
     Mockito.when(rules.evaluate(PlayerChoice.PAPER, PlayerChoice.ROCK)).thenReturn(WinResult.DRAW);
 
     AtomicReference<Boolean> switchExecuted = subscribe(SessionState.SHOW_GAME_RESULT,
-        SessionState.SESSION_FINISHED);
+        SessionState.GAME_FINISHED);
 
     session.update();
 
     Mockito.verify(rules).evaluate(PlayerChoice.PAPER, PlayerChoice.ROCK);
     assertEquals(WinResult.DRAW, session.getWinResult());
+    assertEquals(SessionState.GAME_FINISHED, session.getSessionState());
+    assertTrue(switchExecuted.get());
+  }
+
+  @Test
+  void gameRestart() {
+    session.setTotalGames(666);
+    session.setCurrentGame(1);
+    session.setSessionState(SessionState.GAME_FINISHED);
+
+    AtomicReference<Boolean> switchExecuted = subscribe(SessionState.GAME_FINISHED,
+        SessionState.READ_PLAYER1_INPUT);
+
+    session.update();
+
+    assertEquals(SessionState.READ_PLAYER1_INPUT, session.getSessionState());
+    assertTrue(switchExecuted.get());
+    assertEquals(2, session.getCurrentGame());
+  }
+
+  @Test
+  void sessionTermination() {
+    session.setTotalGames(666);
+    session.setCurrentGame(666);
+    session.setSessionState(SessionState.GAME_FINISHED);
+
+    AtomicReference<Boolean> switchExecuted = subscribe(SessionState.GAME_FINISHED,
+        SessionState.SESSION_FINISHED);
+
+    session.update();
+
     assertEquals(SessionState.SESSION_FINISHED, session.getSessionState());
+    assertTrue(switchExecuted.get());
+    assertEquals(666, session.getCurrentGame());
+  }
+
+  @Test
+  void invalidInputPlayer1() {
+    session.setSessionState(SessionState.INVALID_PLAYER1_INPUT);
+
+    AtomicReference<Boolean> switchExecuted = subscribe(SessionState.INVALID_PLAYER1_INPUT,
+        SessionState.READ_PLAYER1_INPUT);
+
+    session.update();
+
+    assertEquals(SessionState.READ_PLAYER1_INPUT, session.getSessionState());
+    assertTrue(switchExecuted.get());
+  }
+
+  @Test
+  void invalidInputPlayer2() {
+    session.setSessionState(SessionState.INVALID_PLAYER2_INPUT);
+
+    AtomicReference<Boolean> switchExecuted = subscribe(SessionState.INVALID_PLAYER2_INPUT,
+        SessionState.READ_PLAYER2_INPUT);
+
+    session.update();
+
+    assertEquals(SessionState.READ_PLAYER2_INPUT, session.getSessionState());
     assertTrue(switchExecuted.get());
   }
 

@@ -89,14 +89,14 @@ public class Session {
       }
       case SHOW_GAME_RESULT -> {
         winResult = rules.evaluate(player1Choice, player2Choice);
-        changeState(SessionState.SESSION_FINISHED);
+        changeState(SessionState.GAME_FINISHED);
       }
-      case SESSION_FINISHED -> {
-        currentGame++;
-        if (currentGame > totalGames) {
+      case GAME_FINISHED -> {
+        if (currentGame == totalGames) {
           changeState(SessionState.SESSION_FINISHED);
           return;
         }
+        currentGame++;
         changeState(SessionState.READ_PLAYER1_INPUT);
       }
       case INVALID_PLAYER1_INPUT -> changeState(SessionState.READ_PLAYER1_INPUT);

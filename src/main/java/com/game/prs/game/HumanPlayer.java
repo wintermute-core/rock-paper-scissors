@@ -32,9 +32,9 @@ import org.javatuples.Triplet;
 @Slf4j
 public class HumanPlayer implements Player, SessionListener {
 
-   private final BufferedReader bufferedReader;
+  private final BufferedReader bufferedReader;
 
-   private final BufferedOutputStream bufferedOutput;
+  private final BufferedOutputStream bufferedOutput;
 
   public HumanPlayer(InputStream inputStream, OutputStream outputStream) {
     bufferedReader = new BufferedReader(
@@ -44,7 +44,7 @@ public class HumanPlayer implements Player, SessionListener {
 
   @Override
   public int fetchGameCount() {
-    while(true) {
+    while (true) {
       printOutput(PROMPT_GAME_COUNT);
       try {
         String value = bufferedReader.readLine();
@@ -87,7 +87,8 @@ public class HumanPlayer implements Player, SessionListener {
   public void update(Session session, SessionState oldState, SessionState newState) {
 
     switch (newState) {
-      case READ_PLAYER1_INPUT -> printOutput(String.format(GAME_STATUS_LOG, session.getCurrentGame(), session.getTotalGames()));
+      case READ_PLAYER1_INPUT -> printOutput(
+          String.format(GAME_STATUS_LOG, session.getCurrentGame(), session.getTotalGames()));
       case SINGLE_GAME_FINISHED -> {
         Triplet<PlayerChoice, PlayerChoice, WinResult> status = session.lastResult().get();
         printOutput(String.format(OPPONENT_RESPONSE, status.getValue1()));

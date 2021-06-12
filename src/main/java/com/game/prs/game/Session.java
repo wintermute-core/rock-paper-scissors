@@ -43,7 +43,7 @@ public class Session {
   private WinResult winResult;
 
   @Getter
-  private List<Triplet<PlayerChoice, PlayerChoice, WinResult>> history = new CopyOnWriteArrayList<>();
+  private final List<Triplet<PlayerChoice, PlayerChoice, WinResult>> history = new CopyOnWriteArrayList<>();
 
   private final Collection<SessionListener> sessionListeners = new CopyOnWriteArrayList<>();
 

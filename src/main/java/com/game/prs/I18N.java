@@ -8,7 +8,8 @@ import java.util.Arrays;
  */
 public final class I18N {
 
-  private I18N() {}
+  private I18N() {
+  }
 
   public static final String WELCOME_MESSAGE = """
         Paper Rock Scissors game

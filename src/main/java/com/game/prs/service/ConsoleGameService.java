@@ -41,7 +41,7 @@ public class ConsoleGameService extends AbstractGameServiceImpl {
       log.info(TERMINAL_MESSAGE_LOG);
       BufferedReader inputReader = new BufferedReader(
           new InputStreamReader(System.in));
-      while(true) {
+      while (true) {
         System.out.println(TERMINAL_WELCOME_MESSAGE);
         try {
           if (inputReader.readLine() == null) {
@@ -61,7 +61,7 @@ public class ConsoleGameService extends AbstractGameServiceImpl {
           session.update();
         }
         session.clearSubscriptions();
-
+        System.exit(0);
       }
 
     };

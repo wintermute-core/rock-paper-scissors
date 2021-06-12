@@ -1,7 +1,6 @@
 package com.game.prs.service;
 
 import com.game.prs.game.CpuPlayer;
-import com.game.prs.game.HumanPlayer;
 import com.game.prs.game.Player;
 import com.game.prs.game.RulesImpl;
 import com.game.prs.game.Session;

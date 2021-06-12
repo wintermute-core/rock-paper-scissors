@@ -52,7 +52,7 @@ public class TcpGameService extends AbstractGameServiceImpl {
       @Override
       public void run() {
         ServerSocket serverSocket = new ServerSocket(port);
-        while(true) {
+        while (true) {
           Socket socket = serverSocket.accept();
           taskScheduler.execute(handleConnection(socket));
         }

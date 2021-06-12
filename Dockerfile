@@ -1,7 +1,8 @@
 FROM adoptopenjdk/openjdk16:jdk-16.0.1_9-ubuntu-slim
 
-RUN mkdir /app
+RUN mkdir -p /app/config
 ADD build/libs/*.jar /app/
+ADD src/main/resources/application.yaml /app/config/application.yaml
 
 WORKDIR /app
 

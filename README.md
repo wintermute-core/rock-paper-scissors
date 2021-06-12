@@ -162,7 +162,7 @@ List of future improvements:
 * saving of statistics from each application in one common place;
 * CI/CD pipeline for automated test execution and monitoring of code quality;
 * service monitors configuration for Prometheus and Grafana dashboards to show status of applications;
-
+* split in multiple modules for like game rules, interface;
 
 # License
 

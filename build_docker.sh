@@ -3,7 +3,7 @@ set -euo pipefail
 # Script to build docker container
 
 export IMAGE_REGISTRY=${IMAGE_REGISTRY:-denis256/}
-export PUSH_IMAGE=${PUSH_IMAGE:-1}
+export PUSH_IMAGE=${PUSH_IMAGE:-0}
 
 cd "$(dirname "$0")"
 

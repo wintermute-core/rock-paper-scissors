@@ -9,6 +9,11 @@ import com.game.prs.game.Session;
 public interface GameService {
 
   /**
+   * Start game service
+   */
+  void start();
+
+  /**
    * Create new game session
    */
   Session newSession(Player humanPlayer);

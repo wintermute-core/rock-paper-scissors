@@ -145,6 +145,11 @@ public class Session {
     sessionListeners.remove(listener);
   }
 
+  public void clearSubscriptions() {
+    sessionListeners.clear();
+  }
+
+
   @VisibleForTesting
   void setSessionState(SessionState sessionState) {
     this.sessionState = sessionState;

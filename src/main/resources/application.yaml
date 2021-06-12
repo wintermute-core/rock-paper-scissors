@@ -1,2 +1,16 @@
 server:
   port: 8080
+
+logging:
+  file:
+    name: application.log
+
+
+
+game:
+  threads: 10
+  tcp:
+    enabled: true
+    port: 6969
+  console:
+    enabled: true

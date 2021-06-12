@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.game.prs.model.PlayerChoice;
 import com.game.prs.model.SessionState;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -141,6 +142,40 @@ class SessionTest {
             SessionState.INVALID_PLAYER2_INPUT, SessionState.READ_PLAYER2_INPUT))));
   }
 
+  @Test
+  void player1Input() {
+    session.setSessionState(SessionState.READ_PLAYER1_INPUT);
+    Mockito.when(player1.fetchPlayerChoice()).thenReturn(PlayerChoice.PAPER);
+
+    AtomicReference<Boolean> switchExecuted = subscribe(SessionState.READ_PLAYER1_INPUT,
+        SessionState.READ_PLAYER2_INPUT);
+
+    session.update();
+
+    Mockito.verify(player1).fetchPlayerChoice();
+
+    assertEquals(PlayerChoice.PAPER, session.getPlayer1Choice());
+    assertEquals(SessionState.READ_PLAYER2_INPUT, session.getSessionState());
+    assertTrue(switchExecuted.get());
+  }
+
+  @Test
+  void player2Input() {
+    session.setSessionState(SessionState.READ_PLAYER2_INPUT);
+    Mockito.when(player2.fetchPlayerChoice()).thenReturn(PlayerChoice.ROCK);
+
+    AtomicReference<Boolean> switchExecuted = subscribe(SessionState.READ_PLAYER2_INPUT,
+        SessionState.SHOW_GAME_RESULT);
+
+    session.update();
+
+    Mockito.verify(player2).fetchPlayerChoice();
+
+    assertEquals(PlayerChoice.ROCK, session.getPlayer2Choice());
+    assertEquals(SessionState.SHOW_GAME_RESULT, session.getSessionState());
+    assertTrue(switchExecuted.get());
+
+  }
 
   private AtomicReference<Boolean> subscribe(SessionState subOld, SessionState subNew) {
     AtomicReference<Boolean> switchExecuted = new AtomicReference<>(false);

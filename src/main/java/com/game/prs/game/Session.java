@@ -75,7 +75,7 @@ public class Session {
           return;
         }
         player1Choice = playerChoice;
-        changeState(SessionState.READ_PLAYER1_INPUT);
+        changeState(SessionState.READ_PLAYER2_INPUT);
       }
       case READ_PLAYER2_INPUT -> {
         var playerChoice = player2.fetchPlayerChoice();
@@ -85,10 +85,12 @@ public class Session {
           return;
         }
         player2Choice = playerChoice;
-        winResult = rules.evaluate(player1Choice, player2Choice);
         changeState(SessionState.SHOW_GAME_RESULT);
       }
-      case SHOW_GAME_RESULT -> changeState(SessionState.SESSION_FINISHED);
+      case SHOW_GAME_RESULT -> {
+        winResult = rules.evaluate(player1Choice, player2Choice);
+        changeState(SessionState.SESSION_FINISHED);
+      }
       case SESSION_FINISHED -> {
         currentGame++;
         if (currentGame > totalGames) {

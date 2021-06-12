@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.game.prs.model.PlayerChoice;
 import com.game.prs.model.SessionState;
+import com.game.prs.model.WinResult;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -175,6 +176,25 @@ class SessionTest {
     assertEquals(SessionState.SHOW_GAME_RESULT, session.getSessionState());
     assertTrue(switchExecuted.get());
 
+  }
+
+  @Test
+  void gameResult() {
+    session.setSessionState(SessionState.SHOW_GAME_RESULT);
+    session.setPlayer1Choice(PlayerChoice.PAPER);
+    session.setPlayer2Choice(PlayerChoice.ROCK);
+
+    Mockito.when(rules.evaluate(PlayerChoice.PAPER, PlayerChoice.ROCK)).thenReturn(WinResult.DRAW);
+
+    AtomicReference<Boolean> switchExecuted = subscribe(SessionState.SHOW_GAME_RESULT,
+        SessionState.SESSION_FINISHED);
+
+    session.update();
+
+    Mockito.verify(rules).evaluate(PlayerChoice.PAPER, PlayerChoice.ROCK);
+    assertEquals(WinResult.DRAW, session.getWinResult());
+    assertEquals(SessionState.SESSION_FINISHED, session.getSessionState());
+    assertTrue(switchExecuted.get());
   }
 
   private AtomicReference<Boolean> subscribe(SessionState subOld, SessionState subNew) {

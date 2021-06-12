@@ -131,12 +131,22 @@ public class Session {
   }
 
   @VisibleForTesting
-  public void setTotalGames(int totalGames) {
+  void setTotalGames(int totalGames) {
     this.totalGames = totalGames;
   }
 
   @VisibleForTesting
-  public void setCurrentGame(int currentGame) {
+  void setCurrentGame(int currentGame) {
     this.currentGame = currentGame;
+  }
+
+  @VisibleForTesting
+  void setPlayer1Choice(PlayerChoice player1Choice) {
+    this.player1Choice = player1Choice;
+  }
+
+  @VisibleForTesting
+  void setPlayer2Choice(PlayerChoice player2Choice) {
+    this.player2Choice = player2Choice;
   }
 }

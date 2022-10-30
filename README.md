@@ -166,4 +166,4 @@ List of future improvements:
 
 # License
 
-Only for reference, distribution and/or commercial usage not allowed
+MIT
